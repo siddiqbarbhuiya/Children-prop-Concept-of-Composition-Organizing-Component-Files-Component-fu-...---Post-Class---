@@ -1,5 +1,8 @@
 import React, { Component, useState } from "react";
+import State from "./State";
 import "./../styles/App.css";
+import City from "./City";
+import Town from "./Town";
 
 // Do not alter the states const and values inside it.
 const states = [
@@ -154,8 +157,56 @@ const states = [
   },
 ];
 
+
 function App() {
-  return <div id="main"></div>;
+  const [cities, setCities] = useState([]);
+  const [showCity, setShowCity] = useState(false);
+  const [showTowns, setShowTowns] = useState(false);
+  const [towns, setTowns] = useState([])
+  const displayCity = id => {
+    setCities(pre => [...states[id].cities]);
+    setShowCity(!showCity);
+    if(showTowns) setShowTowns(!showTowns);
+  }
+
+  const displayTowns = (id) => {
+    setTowns(cities[id].towns);
+    setShowTowns(!showTowns);
+  }
+
+  return (
+    <div id="main">
+      <div className="states">
+        {states.map((state, idx) => (
+          <State
+            key={`${state + idx}`}
+            displayCity={displayCity}
+            id={idx}
+            stateName={state.name}
+          />
+        ))}
+      </div>
+      <div className="cities">
+        {cities && showCity && cities.map((city, idx) => (
+          <City
+            key={`${city + idx}`}
+            displayTowns={displayTowns}
+            id={idx}
+            cityName={city.name}
+          />
+        ))}
+      </div>
+      <div className="towns">
+        {towns && showTowns && towns.map((town, idx) => (
+          <Town
+            key={`${town + idx}`}
+            id={idx}
+            townName={town.name}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default App;
